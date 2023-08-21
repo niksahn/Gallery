@@ -5,7 +5,6 @@ import ru.sakhno.gallery.domain.models.Photo
 import ru.sakhno.gallery.domain.models.Urls
 
 data class PhotoDto(
-	
 	@SerializedName("id") val id: String,
 	@SerializedName("slug") val slug: String,
 	@SerializedName("created_at") val created_at: String,
@@ -29,7 +28,7 @@ data class PhotoDto(
 )
 
 
-fun PhotoDto.mapToDomain() = Photo(id = id, urlsDto = urls.mapToDomain(), name = description)
+fun PhotoDto.mapToDomain() = Photo(id = id, urls = urls.mapToDomain())
 fun UrlsDto.mapToDomain() = Urls(
 	raw = raw,
 	full = full,

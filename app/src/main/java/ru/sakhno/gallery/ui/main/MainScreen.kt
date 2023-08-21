@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -28,6 +29,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import ru.sakhno.gallery.R
 import ru.sakhno.gallery.domain.models.Photo
+import ru.sakhno.gallery.domain.models.toPhotoUi
 import ru.sakhno.gallery.ui.destinations.ImageScreenDestination
 import ru.sakhno.gallery.ui.main.views.Item
 
@@ -44,7 +46,7 @@ fun MainScreen(
 		viewModel.event.collect() {
 			when (it) {
 				is MainScreenEvent.goToImageScreen -> navigator.navigate(
-					ImageScreenDestination(it.photo)
+					ImageScreenDestination(it.photo.toPhotoUi())
 				)
 			}
 		}
@@ -76,7 +78,7 @@ fun MainScreenContent(
 ) {
 	Scaffold(
 		topBar = {
-			TopAppBar {
+			TopAppBar(backgroundColor = MaterialTheme.colors.primary) {
 				Text(
 					text = stringResource(id = R.string.app_name),
 					textAlign = TextAlign.Center,
@@ -85,15 +87,21 @@ fun MainScreenContent(
 				)
 			}
 		}) {
-		LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.padding(it)) {
-			items(pagingPhoto.itemCount)
-			{ index ->
-				pagingPhoto[index]?.let { photo ->
-					Item(
-						photo = photo,
-						onClickItem = onClickItem
-					)
+		if (pagingPhoto.itemCount > 0) {
+			LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.padding(it)) {
+				items(pagingPhoto.itemCount)
+				{ index ->
+					pagingPhoto[index]?.let { photo ->
+						Item(
+							photo = photo,
+							onClickItem = onClickItem
+						)
+					}
 				}
+			}
+		} else {
+			Box(modifier = Modifier.fillMaxSize()) {
+				CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
 			}
 		}
 	}

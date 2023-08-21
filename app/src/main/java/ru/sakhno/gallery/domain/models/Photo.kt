@@ -1,16 +1,13 @@
 package ru.sakhno.gallery.domain.models
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import ru.sakhno.gallery.ui.models.PhotoUi
+import ru.sakhno.gallery.ui.models.UrlsUi
 
-@Parcelize
 data class Photo(
 	val id: String,
-	val urlsDto: Urls,
-	val name:String
-) : Parcelable
+	val urls: Urls,
+)
 
-@Parcelize
 data class Urls(
 	val raw: String,
 	val full: String,
@@ -18,4 +15,17 @@ data class Urls(
 	val small: String,
 	val thumb: String,
 	val small_s3: String
-) : Parcelable
+)
+
+fun Photo.toPhotoUi() = PhotoUi(
+	id = id,
+	urls = UrlsUi(
+		raw = urls.raw,
+		full = urls.full,
+		regular = urls.regular,
+		small = urls.small,
+		thumb = urls.thumb,
+		small_s3 = urls.small_s3
+	),
+)
+

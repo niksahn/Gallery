@@ -25,7 +25,6 @@ class PhotoPagingSource @Inject constructor(
 			val page = params.key ?: 1
 			val response = photoApiService.getPhotos(client_id = Constants.accessKey, page = page)
 				.map { it.mapToDomain() }
-			
 			LoadResult.Page(
 				data = response,
 				prevKey = if (page == 1) null else page.minus(1),
