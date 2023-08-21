@@ -1,11 +1,10 @@
-import org.apache.tools.ant.util.JavaEnvUtils.VERSION_1_8
-
 plugins {
 	id("com.android.application")
 	id("org.jetbrains.kotlin.android")
 	id("com.google.dagger.hilt.android")
 	id("com.google.devtools.ksp") version "1.8.10-1.0.9"
 	id("kotlin-kapt")
+	id("kotlin-parcelize")
 }
 object DependencyVers {
 	val compose_ui_version = "1.3.3"
@@ -62,8 +61,8 @@ dependencies {
 	implementation("io.github.raamcosta.compose-destinations:core:${DependencyVers.destinations_version}")
 	ksp("io.github.raamcosta.compose-destinations:ksp:${DependencyVers.destinations_version}")
 	
-	implementation ("androidx.paging:paging-runtime:${DependencyVers.paging_version}")
-	implementation ("androidx.paging:paging-compose:1.0.0-alpha18")
+	implementation("androidx.paging:paging-runtime:${DependencyVers.paging_version}")
+	implementation("androidx.paging:paging-compose:1.0.0-alpha18")
 	implementation("com.google.dagger:hilt-android:${DependencyVers.hilt_version}")
 	kapt("com.google.dagger:hilt-compiler:${DependencyVers.hilt_version}")
 	implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
@@ -75,7 +74,9 @@ dependencies {
 	implementation("androidx.compose.material:material:1.3.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
 	
-	implementation("com.github.bumptech.glide:compose:1.0.0-alpha.1")
+	implementation("com.github.bumptech.glide:compose:1.0.0-alpha.3")
+	
+	implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 	
 	implementation("androidx.core:core-ktx:1.9.0")
 	implementation("androidx.appcompat:appcompat:1.6.1")

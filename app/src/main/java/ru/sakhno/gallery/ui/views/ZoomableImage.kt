@@ -1,60 +1,55 @@
 package ru.sakhno.gallery.ui.views
 
-import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
+import ru.sakhno.gallery.R
 
-
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ZoomableBox(
-	modifier: Modifier = Modifier,
-	minScale: Float = 0.1f,
-	maxScale: Float = 5f,
-	content: @Composable ZoomableBoxScope.() -> Unit
-) {
+fun ZoomableImage(image: String) {
 	var scale by remember { mutableStateOf(1f) }
-	var offsetX by remember { mutableStateOf(0f) }
-	var offsetY by remember { mutableStateOf(0f) }
-	var size by remember { mutableStateOf(IntSize.Zero) }
-	Box(
-		modifier = modifier
-			.clip(RectangleShape)
-			.onSizeChanged { size = it }
-			.pointerInput(Unit) {
-				detectTransformGestures { _, pan, zoom, _ ->
-					scale = maxOf(minScale, minOf(scale * zoom, maxScale))
-					val maxX = (size.width * (scale - 1)) / 2
-					val minX = -maxX
-					offsetX = maxOf(minX, minOf(maxX, offsetX + pan.x))
-					val maxY = (size.height * (scale - 1)) / 2
-					val minY = -maxY
-					offsetY = maxOf(minY, minOf(maxY, offsetY + pan.y))
-				}
-			}
+	var offset by remember { mutableStateOf(Offset.Zero) }
+	val state = rememberTransformableState { zoomChange, offsetChange, _ ->
+		scale *= zoomChange
+		offset += offsetChange
+	}
+	
+	Column(
+		verticalArrangement = Arrangement.Center,
+		horizontalAlignment = Alignment.CenterHorizontally,
 	) {
-		val scope = ZoomableBoxScopeImpl(scale, offsetX, offsetY)
-		scope.content()
+		GlideImage(
+			model = image,
+			modifier = Modifier
+				.fillMaxSize()
+				.transformable(state = state)
+				.graphicsLayer(
+					scaleX = scale,
+					scaleY = scale,
+					translationX = offset.x,
+					translationY = offset.y,
+				),
+			contentDescription = null,
+			loading = placeholder { CircularProgressIndicator() },
+			failure = placeholder { Text(text = stringResource(id = R.string.load_error)) }
+		)
 	}
 }
-
-interface ZoomableBoxScope {
-	val scale: Float
-	val offsetX: Float
-	val offsetY: Float
-}
-
-private data class ZoomableBoxScopeImpl(
-	override val scale: Float,
-	override val offsetX: Float,
-	override val offsetY: Float
-) : ZoomableBoxScope
