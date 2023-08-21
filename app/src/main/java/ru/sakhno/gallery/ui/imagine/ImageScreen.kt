@@ -9,6 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import ru.sakhno.gallery.domain.models.Photo
+import ru.sakhno.gallery.ui.models.PhotoUi
 import ru.sakhno.gallery.ui.views.ZoomableImage
 
 @Destination
@@ -16,12 +17,12 @@ import ru.sakhno.gallery.ui.views.ZoomableImage
 fun ImageScreen(
 	navigator: DestinationsNavigator,
 	viewModel: ImageViewModel = hiltViewModel(),
-	photo: Photo
+	photo: PhotoUi
 ) {
 	val context = LocalContext.current
 	val state by viewModel.screenState.collectAsStateWithLifecycle()
 	LaunchedEffect(Unit) { viewModel.setPhoto(photo) }
-	state.photo?.urlsDto?.let {
+	state.photo?.urls?.let {
 		ZoomableImage(
 			image = it.regular
 		)

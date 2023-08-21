@@ -31,7 +31,7 @@ fun Item(
 				.fillMaxSize()
 				.height(150.dp)
 				.padding(10.dp),
-			model = photo.urlsDto.small,
+			model = photo.urls.small,
 			contentDescription = null,
 			loading = placeholder { CircularProgressIndicator() },
 			failure = placeholder { Text(text = stringResource(id = R.string.load_error)) }
