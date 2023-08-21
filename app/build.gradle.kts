@@ -7,7 +7,6 @@ plugins {
 	id("com.google.devtools.ksp") version "1.8.10-1.0.9"
 	id("kotlin-kapt")
 }
-
 object DependencyVers {
 	val compose_ui_version = "1.3.3"
 	val destinations_version = "1.7.41-beta"

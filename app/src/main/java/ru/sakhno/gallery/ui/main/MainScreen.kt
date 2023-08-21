@@ -1,29 +1,33 @@
 package ru.sakhno.gallery.ui.main
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import ru.sakhno.gallery.R
 import ru.sakhno.gallery.domain.models.Photo
+import ru.sakhno.gallery.ui.destinations.ImageScreenDestination
+import ru.sakhno.gallery.ui.main.views.Item
 
 @RootNavGraph(start = true)
 @Destination
@@ -34,6 +38,15 @@ fun MainScreen(
 ) {
 	val pagingPhoto = viewModel.photosPaging.collectAsLazyPagingItems()
 	val context = LocalContext.current
+	LaunchedEffect(Unit) {
+		viewModel.event.collect() {
+			when (it) {
+				is MainScreenEvent.goToImageScreen -> navigator.navigate(
+					ImageScreenDestination(it.photo)
+				)
+			}
+		}
+	}
 	when (pagingPhoto.loadState.append) {
 		is LoadState.NotLoading -> Unit
 		LoadState.Loading -> {
@@ -42,6 +55,7 @@ fun MainScreen(
 				CircularProgressIndicator(modifier = Modifier.align(Alignment.BottomCenter))
 			}
 		}
+		
 		is LoadState.Error -> {
 			Toast.makeText(
 				context,
@@ -50,46 +64,31 @@ fun MainScreen(
 			).show()
 		}
 	}
-	MainScreenContent(pagingPhoto = pagingPhoto, context = context)
+	MainScreenContent(pagingPhoto = pagingPhoto, onClickItem = viewModel::onClickItem)
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun MainScreenContent(
 	pagingPhoto: LazyPagingItems<Photo>,
-	context: Context
+	onClickItem: (Photo) -> Unit
 ) {
-	LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-		items(pagingPhoto.itemCount)
-		{ index ->
-			pagingPhoto[index]?.let { photo ->
-				GlideImage(
-					modifier = Modifier
-						.fillMaxSize(0.2f)
-						.height(100.dp)
-						.padding(4.dp),
-					model = photo.urlsDto.small,
-					contentDescription = null
-				) {
-					it.fitCenter().centerCrop()
-				}
+	Scaffold(
+		topBar = {
+			TopAppBar {
+				Text(text = stringResource(id = R.string.app_name), textAlign = TextAlign.Center)
 			}
-		}
-		when (pagingPhoto.loadState.append) {
-			is LoadState.NotLoading -> Unit
-			LoadState.Loading -> {
-				item {
-					CircularProgressIndicator()
+		}) {
+		LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.padding(it)) {
+			items(pagingPhoto.itemCount)
+			{ index ->
+				pagingPhoto[index]?.let { photo ->
+					Item(
+						photo = photo,
+						onClickItem = onClickItem
+					)
 				}
-			}
-			
-			is LoadState.Error -> {
-				Toast.makeText(
-					context,
-					(pagingPhoto.loadState.append as LoadState.Error).error.message.toString(),
-					Toast.LENGTH_LONG
-				).show()
 			}
 		}
 	}
 }
+

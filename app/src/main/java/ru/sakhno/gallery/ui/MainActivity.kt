@@ -9,7 +9,6 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
-import ru.sakhno.gallery.ui.main.NavGraphs
 import ru.sakhno.gallery.ui.theme.GalleryTheme
 
 @AndroidEntryPoint
