@@ -6,7 +6,6 @@ import ru.sakhno.gallery.ui.models.UrlsUi
 data class Photo(
 	val id: String,
 	val urls: Urls,
-	val name: String
 )
 
 data class Urls(
@@ -28,6 +27,5 @@ fun Photo.toPhotoUi() = PhotoUi(
 		thumb = urls.thumb,
 		small_s3 = urls.small_s3
 	),
-	name = name
 )
 

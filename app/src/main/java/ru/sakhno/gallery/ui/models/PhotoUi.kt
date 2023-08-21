@@ -7,7 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class PhotoUi(
 	val id: String,
 	val urls: UrlsUi,
-	val name: String
 ) : Parcelable
 
 @Parcelize

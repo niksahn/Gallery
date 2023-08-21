@@ -3,6 +3,7 @@ package ru.sakhno.gallery.ui.views
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
@@ -48,7 +49,11 @@ fun ZoomableImage(image: String) {
 					translationY = offset.y,
 				),
 			contentDescription = null,
-			loading = placeholder { CircularProgressIndicator() },
+			loading = placeholder {
+				Box(modifier = Modifier.fillMaxSize()) {
+					CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+				}
+			},
 			failure = placeholder { Text(text = stringResource(id = R.string.load_error)) }
 		)
 	}

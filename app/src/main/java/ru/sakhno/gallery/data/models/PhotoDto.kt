@@ -28,9 +28,7 @@ data class PhotoDto(
 )
 
 
-fun PhotoDto.mapToDomain() = Photo(id = id, urls = urls.mapToDomain(),
-	name = description
-)
+fun PhotoDto.mapToDomain() = Photo(id = id, urls = urls.mapToDomain())
 fun UrlsDto.mapToDomain() = Urls(
 	raw = raw,
 	full = full,

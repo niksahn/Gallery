@@ -100,11 +100,9 @@ fun MainScreenContent(
 				}
 			}
 		} else {
-			Toast.makeText(
-				LocalContext.current,
-				stringResource(id = R.string.empty_rezult),
-				Toast.LENGTH_LONG
-			).show()
+			Box(modifier = Modifier.fillMaxSize()) {
+				CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+			}
 		}
 	}
 }
