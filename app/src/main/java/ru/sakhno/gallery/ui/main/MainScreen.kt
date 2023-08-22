@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -68,6 +69,23 @@ fun MainScreen(
 			).show()
 		}
 	}
+	when (pagingPhoto.loadState.refresh) {
+		is LoadState.NotLoading -> Unit
+		is LoadState.Loading -> {
+			Box(modifier = Modifier.fillMaxSize())
+			{
+				CircularProgressIndicator(modifier = Modifier.align(Alignment.BottomCenter))
+			}
+		}
+		
+		is LoadState.Error -> {
+			Toast.makeText(
+				context,
+				(pagingPhoto.loadState.refresh as LoadState.Error).error.message.toString(),
+				Toast.LENGTH_LONG
+			).show()
+		}
+	}
 	MainScreenContent(pagingPhoto = pagingPhoto, onClickItem = viewModel::onClickItem)
 }
 
@@ -92,10 +110,12 @@ fun MainScreenContent(
 				items(pagingPhoto.itemCount)
 				{ index ->
 					pagingPhoto[index]?.let { photo ->
-						Item(
-							photo = photo,
-							onClickItem = onClickItem
-						)
+						Box(modifier = Modifier.padding(5.dp)) {
+							Item(
+								photo = photo,
+								onClickItem = onClickItem
+							)
+						}
 					}
 				}
 			}

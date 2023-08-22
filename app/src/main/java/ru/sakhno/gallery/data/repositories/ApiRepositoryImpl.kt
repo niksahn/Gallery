@@ -12,7 +12,7 @@ class ApiRepositoryImpl @Inject constructor(
 ) : ApiReposotory {
 	override fun getPhoto() = Pager(
 		config = PagingConfig(
-			pageSize = 20,
+			pageSize = 15,
 		),
 		pagingSourceFactory = {
 			PhotoPagingSource(photoApiService)
