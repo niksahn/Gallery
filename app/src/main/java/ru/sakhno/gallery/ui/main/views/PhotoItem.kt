@@ -27,12 +27,15 @@ fun Item(
 	photo: Photo,
 	onClickItem: (Photo) -> Unit
 ) {
-	Card(modifier = Modifier.clickable(onClick = remember(photo) { { onClickItem(photo) } })) {
+	Card(
+		elevation = 10.dp,
+		modifier = Modifier.clickable(onClick = remember(photo) { { onClickItem(photo) } })
+	) {
 		GlideImage(
 			modifier = Modifier
 				.fillMaxSize()
 				.height(150.dp)
-				.padding(10.dp),
+				.padding(8.dp),
 			model = photo.urls.small,
 			contentDescription = null,
 			loading = placeholder {
