@@ -25,14 +25,14 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import ru.sakhno.gallery.R
-import ru.sakhno.gallery.domain.models.Photo
+import ru.sakhno.gallery.ui.models.PhotoUi
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun Item(
-	photo: Photo,
-	onClickItem: (Photo) -> Unit
+	photo: PhotoUi,
+	onClickItem: (PhotoUi) -> Unit
 ) {
 	var loading by remember {
 		mutableStateOf(true)
