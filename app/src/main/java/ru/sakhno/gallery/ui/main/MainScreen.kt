@@ -29,10 +29,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import ru.sakhno.gallery.R
-import ru.sakhno.gallery.domain.models.Photo
-import ru.sakhno.gallery.domain.models.toPhotoUi
 import ru.sakhno.gallery.ui.destinations.ImageScreenDestination
 import ru.sakhno.gallery.ui.main.views.Item
+import ru.sakhno.gallery.ui.models.PhotoUi
 
 @RootNavGraph(start = true)
 @Destination
@@ -47,7 +46,7 @@ fun MainScreen(
 		viewModel.event.collect() {
 			when (it) {
 				is MainScreenEvent.goToImageScreen -> navigator.navigate(
-					ImageScreenDestination(it.photo.toPhotoUi())
+					ImageScreenDestination(it.photo)
 				)
 			}
 		}
@@ -91,8 +90,8 @@ fun MainScreen(
 
 @Composable
 fun MainScreenContent(
-	pagingPhoto: LazyPagingItems<Photo>,
-	onClickItem: (Photo) -> Unit
+	pagingPhoto: LazyPagingItems<PhotoUi>,
+	onClickItem: (PhotoUi) -> Unit
 ) {
 	Scaffold(
 		topBar = {
